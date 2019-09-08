@@ -11,8 +11,13 @@ type resource interface {
 	ID() int
 }
 
+type resourceList interface {
+	Get(int) resource
+	Len() int
+}
+
 type proxy interface {
-	GetResources() ([]resource, error)
+	GetResources() (resourceList, error)
 }
 
 // A Consumer uses a service through a proxy
@@ -35,8 +40,8 @@ func (c *Consumer) Do() error {
 		return err
 	}
 
-	for _, resource := range resources {
-		fmt.Println(resource.String())
+	for i := 0; i < resources.Len(); i++ {
+		fmt.Println(resources.Get(i))
 	}
 
 	return nil
